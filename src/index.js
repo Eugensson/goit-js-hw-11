@@ -1,51 +1,35 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
 const axios = require('axios').default;
+import CardsApiService from './cards-service';
 
 const searchForm = document.querySelector('#search-form');
-const searchQuery = document.querySelector('[name="searchQuery"]');
 const submitBtn = document.querySelector('[type="submit"]');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
-
 loadMoreBtn.style.display = 'none';
 
+const cardsApiService = new CardsApiService();
+
 searchForm.addEventListener('submit', onSearch);
+loadMoreBtn.addEventListener('click', onLoadMore);
 
 function onSearch(e) {
   e.preventDefault();
 
-  if (searchQuery.value.trim() === '') {
-    Notiflix.Notify.info('Enter your request in the search');
-    return;
-  }
-
-  onFetchInfo(searchQuery.value.trim())
-    .then(data => {
-      if (data.totalHits === 0) {
-        Notiflix.Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-        return;
-      }
-
-      renderPhotosCard(data);
-      loadMoreBtn.style.display = 'flex';
-    })
-    .catch(error => console.log(error))
-    .finally(() => searchForm.reset());
+  clearCardsGallery();
+  cardsApiService.query = e.currentTarget.elements.searchQuery.value.trim();
+  cardsApiService.resetPage();
+  cardsApiService.fetchCards().then(appendCardsMarkup);
+  loadMoreBtn.style.display = 'flex';
 }
 
-function onFetchInfo(inputValue) {
-  return fetch(
-    `https://pixabay.com/api/?key=34223643-b3db1c288a37bd2710c13c9b4&q=${inputValue}&image_type=photo&orientation=horizontal&safesearch=true`
-  ).then(response => {
-    return response.json();
-  });
+function onLoadMore() {
+  cardsApiService.fetchCards().then(appendCardsMarkup);
 }
 
-function renderPhotosCard(data) {
-  const markup = data.hits
+function appendCardsMarkup(hits) {
+  const markup = hits
     .map(
       ({
         webformatURL,
@@ -83,5 +67,33 @@ function renderPhotosCard(data) {
       }
     )
     .join('');
-  gallery.innerHTML = markup;
+  gallery.insertAdjacentHTML('beforeend', markup);
 }
+
+function clearCardsGallery() {
+  gallery.innerHTML = '';
+}
+
+// function onSearch(e) {
+//   e.preventDefault();
+
+//   if (searchQuery.value.trim() === '') {
+//     Notiflix.Notify.info('Enter your request in the search');
+//     return;
+//   }
+
+//   onFetchInfo(e.currentTarget.elements.searchQuery.value.trim())
+//     .then(data => {
+//       if (data.totalHits === 0) {
+//         Notiflix.Notify.failure(
+//           'Sorry, there are no images matching your search query. Please try again.'
+//         );
+//         return;
+//       }
+
+//       renderPhotosCard(data);
+//       loadMoreBtn.style.display = 'flex';
+//     })
+//     .catch(error => console.log(error))
+//     .finally(() => searchForm.reset());
+// }
