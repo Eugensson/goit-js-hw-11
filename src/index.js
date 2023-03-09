@@ -5,6 +5,12 @@ import CardsApiService from './cards-service';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+let lightbox = new SimpleLightbox('.gallery a', {
+  captionDelay: 250,
+  animationSpeed: 250,
+  fadeSpeed: 200,
+});
+
 const searchForm = document.querySelector('#search-form');
 const submitBtn = document.querySelector('[type="submit"]');
 const gallery = document.querySelector('.gallery');
@@ -41,6 +47,7 @@ function onSearch(e) {
     }
 
     appendCardsMarkup(data);
+    lightbox.refresh();
   });
 
   clearCardsGallery();
@@ -51,6 +58,7 @@ function onLoadMore() {
     console.log(cardsApiService.currentPage(data));
     if (cardsApiService.currentPage(data) < Math.ceil(data.totalHits / 40)) {
       appendCardsMarkup(data);
+      lightbox.refresh();
     } else {
       Notiflix.Notify.info(
         "We're sorry, but you've reached the end of search results."
