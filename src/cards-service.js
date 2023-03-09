@@ -11,10 +11,9 @@ export default class CardsApiService {
       .then(response => {
         return response.json();
       })
-      .then(data => {
+      .then(({ hits }) => {
         this.page += 1;
-
-        return data.hits;
+        return hits;
       });
   }
 
