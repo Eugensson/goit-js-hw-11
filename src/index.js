@@ -26,8 +26,8 @@ function onSearch(e) {
 
   cardsApiService.resetPage();
 
-  cardsApiService.fetchCards().then(hits => {
-    if (hits.length === 0) {
+  cardsApiService.fetchCards().then(data => {
+    if (data.hits.length === 0) {
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
@@ -37,17 +37,20 @@ function onSearch(e) {
       loadMoreBtn.style.display = 'flex';
     }
 
-    appendCardsMarkup(hits);
+    appendCardsMarkup(data);
   });
 
   clearCardsGallery();
 }
 
 function onLoadMore() {
-  cardsApiService.fetchCards().then(appendCardsMarkup);
+  cardsApiService.fetchCards().then(data => {
+    appendCardsMarkup(data);
+  });
 }
 
-function appendCardsMarkup(hits) {
+function appendCardsMarkup(data) {
+  const hits = data.hits;
   const markup = hits
     .map(
       ({
@@ -92,3 +95,11 @@ function appendCardsMarkup(hits) {
 function clearCardsGallery() {
   gallery.innerHTML = '';
 }
+
+// if (Math.ceil(data.totalHits / 40) === 13) {
+//   Notiflix.Notify.info(
+//     "We're sorry, but you've reached the end of search results."
+//   );
+//   loadMoreBtn.style.display = 'none';
+//   return;
+// }
