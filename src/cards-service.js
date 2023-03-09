@@ -31,10 +31,6 @@ export default class CardsApiService {
     }
   }
 
-  numberOfResponses() {
-    return this.perPage;
-  }
-
   currentPage() {
     return this.page - 1;
   }

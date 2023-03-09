@@ -2,6 +2,8 @@ import './css/styles.css';
 import Notiflix from 'notiflix';
 const axios = require('axios').default;
 import CardsApiService from './cards-service';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchForm = document.querySelector('#search-form');
 const submitBtn = document.querySelector('[type="submit"]');
@@ -34,6 +36,7 @@ function onSearch(e) {
       loadMoreBtn.style.display = 'none';
       return;
     } else {
+      Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
       loadMoreBtn.style.display = 'flex';
     }
 
@@ -45,7 +48,15 @@ function onSearch(e) {
 
 function onLoadMore() {
   cardsApiService.fetchCards().then(data => {
-    appendCardsMarkup(data);
+    console.log(cardsApiService.currentPage(data));
+    if (cardsApiService.currentPage(data) < Math.ceil(data.totalHits / 40)) {
+      appendCardsMarkup(data);
+    } else {
+      Notiflix.Notify.info(
+        "We're sorry, but you've reached the end of search results."
+      );
+      loadMoreBtn.style.display = 'none';
+    }
   });
 }
 
@@ -95,11 +106,3 @@ function appendCardsMarkup(data) {
 function clearCardsGallery() {
   gallery.innerHTML = '';
 }
-
-// if (Math.ceil(data.totalHits / 40) === 13) {
-//   Notiflix.Notify.info(
-//     "We're sorry, but you've reached the end of search results."
-//   );
-//   loadMoreBtn.style.display = 'none';
-//   return;
-// }
