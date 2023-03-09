@@ -7,14 +7,67 @@ body {
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fafafa;
+  background-color: #ffffff;
   color: #212121;
   line-height: 1.5;
 }
 
-#search-box {
-  font: inherit;
-  padding: 8px;
-  max-width: 320px;
-  margin-bottom: 16px;
+.search-form {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+
+  padding: 10px;
+  background-color: #0c0465;
+}
+
+.submit {
+  cursor: pointer;
+}
+
+.gallery {
+  margin: 0 auto;
+  /* width: 1300px; */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px;
+  justify-content: center;
+  background-color: #fafafa;
+}
+
+.photo-card {
+  background-color: #fff;
+  border: 1px solid;
+  border-radius: 4px;
+  box-shadow: 4px 2px 2px #999696;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gallery__link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.img {
+  display: block;
+  width: 300px;
+  height: 200px;
+}
+
+.load-more {
+  margin: 40px auto;
 }
